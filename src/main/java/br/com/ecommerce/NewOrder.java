@@ -12,21 +12,23 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 public class NewOrder {
   public static void main(String[] args) throws ExecutionException, InterruptedException {
-    var key = UUID.randomUUID().toString();
-    var value = key + ", 678678, 300";
     var producer = new KafkaProducer<String, String>(properties());
-    var record = new ProducerRecord<>("ECOMMERCE_NEW_ORDER", key, value);
-    Callback callback = (data, ex) -> {
-      if (ex != null) {
-        ex.printStackTrace();
-        return;
-      }
-      System.out.println(data.topic() + ":::partition " + data.partition() + "/ offset" + data.offset() + "/ timestamp" + data.timestamp());
-    };
-    var email = "Thank you for your order! We are processing your order!";
-    var emailRecord = new ProducerRecord<>("ECOMMERCE_SEND_EMAIL", key, email);
-    producer.send(record, callback).get();
-    producer.send(emailRecord, callback).get();
+      for (var i = 0; i < 100; i++) {
+        var key = UUID.randomUUID().toString();
+        var value = key + ", 678678, 300";
+        var record = new ProducerRecord<>("ECOMMERCE_NEW_ORDER", key, value);
+        Callback callback = (data, ex) -> {
+          if (ex != null) {
+            ex.printStackTrace();
+            return;
+          }
+          System.out.println(data.topic() + ":::partition " + data.partition() + "/ offset" + data.offset() + "/ timestamp" + data.timestamp());
+        };
+        var email = "Thank you for your order! We are processing your order!";
+        var emailRecord = new ProducerRecord<>("ECOMMERCE_SEND_EMAIL", key, email);
+        producer.send(record, callback).get();
+        producer.send(emailRecord, callback).get();
+    }
   }
 
   private static Properties properties() {
