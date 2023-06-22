@@ -13,7 +13,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 public class NewOrder {
   public static void main(String[] args) throws ExecutionException, InterruptedException {
     var producer = new KafkaProducer<String, String>(properties());
-      for (var i = 0; i < 100; i++) {
+      for (var i = 0; i < 10; i++) {
         var key = UUID.randomUUID().toString();
         var value = key + ", 678678, 300";
         var record = new ProducerRecord<>("ECOMMERCE_NEW_ORDER", key, value);
